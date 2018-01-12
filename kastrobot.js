@@ -5,6 +5,7 @@ var kastrords = [/k(a*)tso/g,/k(a*)stro/g,/к(а*)стро/g];
 
 var madjords = [/madj/gi,/мадж/gi,/мудж/gi];
 
+// Word parts for Mudj
 var madj_1 = ["Мун","Мня","Мин","Маа","Минин"]
 var madj_2 = ["адж","нядж","идж","ядж","удж"]
 
