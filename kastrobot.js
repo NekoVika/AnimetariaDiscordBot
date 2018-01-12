@@ -15,14 +15,14 @@ client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
     // Example of changing the bot's playing game to something useful. `client.user` is what the
     // docs refer to as the "ClientUser".
-    client.user.setGame(`on the flute`);
+    client.user.setGame(`with itself`);
   });
 
 client.on("message", async message => {
     if(message.author.bot) return;
     for(i=0,x=kastrords.length;i<x;i++){
         if(message.content.toLowerCase().search(kastrords[i])>=0){            
-            message.channel.send("@Валероподданный Слався Каастризм его великий! Да прибудет воля Кастро!");
+            message.channel.send("Слався Каастризм его великий! Да прибудет воля Кастро!");
             break;
         };
     };
