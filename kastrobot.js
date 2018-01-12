@@ -11,18 +11,19 @@ var madj_2 = ["адж","нядж","идж","ядж","удж"]
 
 
 client.on("ready", () => {
+    client.user.setUsername("CHOPK");
     // This event will run if the bot starts, and logs in, successfully.
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
     // Example of changing the bot's playing game to something useful. `client.user` is what the
     // docs refer to as the "ClientUser".
-    client.user.setGame(`with itself`);
+    client.user.setGame(`with himself`);
   });
 
 client.on("message", async message => {
     if(message.author.bot) return;
     for(i=0,x=kastrords.length;i<x;i++){
         if(message.content.toLowerCase().search(kastrords[i])>=0){            
-            message.channel.send("Слався Каастризм его великий! Да прибудет воля Кастро!");
+            message.channel.send("Слався Кааастризм его великий! Да прибудет воля Кааастро!");
             break;
         };
     };
