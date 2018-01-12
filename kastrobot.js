@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-var kastrords = [/k(a*)tso/g,/k(a*)stro/g,/к(а*)стро/g];
+var kastrords = [/k(a*)tso/g,/k(a*)stro/g,/к(а*)стро/g,/к(а*)тсо/g];
 
 var madjords = [/madj/gi,/мадж/gi,/мудж/gi];
 
@@ -22,7 +22,7 @@ client.on("message", async message => {
     if(message.author.bot) return;
     for(i=0,x=kastrords.length;i<x;i++){
         if(message.content.toLowerCase().search(kastrords[i])>=0){            
-            message.channel.send("@everyone Слався Каастризм его великий! Да прибудет воля Кастро!");
+            message.channel.send("@Валероподданный Слався Каастризм его великий! Да прибудет воля Кастро!");
             break;
         };
     };
