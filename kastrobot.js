@@ -12,6 +12,7 @@ var madj_2 = ["адж","нядж","идж","ядж","удж"]
 
 client.on("ready", () => {
     client.user.setUsername("CHOPK");
+    console.log(client.guilds);
     // This event will run if the bot starts, and logs in, successfully.
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
     // Example of changing the bot's playing game to something useful. `client.user` is what the
@@ -19,6 +20,17 @@ client.on("ready", () => {
     client.user.setGame(`with himself`);
   });
 
+
+//todo on kaaastro login greet kaaastro
+client.on("presenceUpdate", (old, new_) => {
+    if (new_.user.username=="Lier" || new_.user.username=='VikA'){
+        //console.log(old.presence.status, new_.presence.status, ['idle', 'online', 'dnd'].indexOf(new_.presence.status));
+        if (old.presence.status == 'offline' && ['idle', 'online', 'dnd'].indexOf(new_.presence.status) >= 0){
+            var ch_ = new_.guild.channels.find(ch => ch.name === 'g-rank');
+            ch_.send(new_.user.username+' logged in!');
+        }
+    }
+});
 client.on("message", async message => {
     if(message.author.bot) return;
     for(i=0,x=kastrords.length;i<x;i++){
