@@ -12,7 +12,7 @@ var madj_2 = ["адж","нядж","идж","ядж","удж"]
 
 client.on("ready", () => {
     client.user.setUsername("CHOPK");
-    console.log(client.guilds);
+    //console.log(client.guilds);
     // This event will run if the bot starts, and logs in, successfully.
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
     // Example of changing the bot's playing game to something useful. `client.user` is what the
@@ -23,7 +23,12 @@ client.on("ready", () => {
 
 //todo on kaaastro login greet kaaastro
 client.on("presenceUpdate", (old, new_) => {
-    if (new_.user.username=="Lier" || new_.user.username=='VikA'){
+    user_list=["270723318427025418",//Lier
+               "270911343274491905",//Vika
+               "271006635126816778",//Mudj
+               "270974444871221259"//Volera
+    ]
+    if (user_list.indexOf(new_.user.id)>=0){
         //console.log(old.presence.status, new_.presence.status, ['idle', 'online', 'dnd'].indexOf(new_.presence.status));
         if (old.presence.status == 'offline' && ['idle', 'online', 'dnd'].indexOf(new_.presence.status) >= 0){
             var ch_ = new_.guild.channels.find(ch => ch.name === 'g-rank');
