@@ -13,8 +13,8 @@ var kastrords = [/k(a*)tso/g,/k(a*)stro/g,/к(а*)стро/g,/к(а*)тсо/g];
 var madjords = [/madj/gi,/мадж/gi,/мудж/gi];
 
 // Word parts for Mudj
-var madj_1 = ["Мун","Мня","Мин","Маа","Минин"]
-var madj_2 = ["адж","нядж","идж","ядж","удж"]
+var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
+var madj_2 = ["адж","нядж","идж","ядж","удж","юдж","ньдж","ажд","няжд","ижд","яжд","ужд","южд","ньжд"]
 
 
 client.on("ready", () => {
@@ -46,28 +46,30 @@ client.on("presenceUpdate", (old, new_) => {
 client.on("message", async message => {
     if(message.author.bot) return;
     if (message.content.startsWith('!')){
-        switch(message.content){
-            case '!games': 
+        const args = message.content.slice(1).trim().split(/ +/g);
+        const command = args.shift().toLowerCase();
+        switch(command){
+            case 'games': 
             message.channel.send("В лол скатайте");
             break;
         }
         return;
-    }else{
-        for(i=0,x=kastrords.length;i<x;i++){
-            if(message.content.toLowerCase().search(kastrords[i])>=0){            
-                message.channel.send("Слався Кааастризм его великий! Да прибудет воля Кааастро!");
-                break;
-            };
-        };
-    
-        for(i=0,x=madjords.length;i<x;i++){
-            var found_w=message.content.match(madjords[i]);
-            if(found_w){
-                var right_madj = madj_1[Math.floor((Math.random() * madj_1.length))]+madj_2[Math.floor((Math.random() * madj_2.length))]
-                message.channel.send(">>"+found_w[0]+" Возможно, вы имели ввиду "+right_madj+"?");            
-            }
-        };
     }
+    for(i=0,x=kastrords.length;i<x;i++){
+        if(message.content.toLowerCase().search(kastrords[i])>=0){            
+            message.channel.send("Слався Кааастризм его великий! Да прибудет воля Кааастро!");
+            break;
+        };
+    };
+
+    for(i=0,x=madjords.length;i<x;i++){
+        var found_w=message.content.match(madjords[i]);
+        if(found_w){
+            var right_madj = madj_1[Math.floor((Math.random() * madj_1.length))]+madj_2[Math.floor((Math.random() * madj_2.length))]
+            message.channel.send(">>"+found_w[0]+" Возможно, вы имели ввиду "+right_madj+"?");            
+        }
+    };
+
     
 
     
