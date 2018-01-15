@@ -66,7 +66,7 @@ client.on("message", async message => {
         var found_w=message.content.match(madjords[i]);
         if(found_w){
             var right_madj = madj_1[Math.floor((Math.random() * madj_1.length))]+madj_2[Math.floor((Math.random() * madj_2.length))]
-            message.channel.send(">>"+found_w[0]+" Возможно, вы имели ввиду "+right_madj+"?");            
+            message.channel.send("`>>"+found_w[0]+"` Возможно, вы имели ввиду "+right_madj+"?");            
         }
     };
 
