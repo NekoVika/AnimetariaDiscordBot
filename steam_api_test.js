@@ -1,7 +1,8 @@
 var SteamApi = require('steam-api');
 var fs = require('fs');
 
-var app = new SteamApi.App("");
+code_sapi=fs.readFileSync('sapi.txt').toString()
+var app = new SteamApi.App(code_sapi);
 
  
 // // App Methods
@@ -11,6 +12,4 @@ var app = new SteamApi.App("");
  
 app.GetAppList().done(function(result){
   console.log(result);
-  fs.writeFileSync('./data.json', result.join(',') , 'utf-8'); 
-  fs.writeFileSync("app_list.txt", result);
 });
