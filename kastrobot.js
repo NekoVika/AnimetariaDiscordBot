@@ -1,5 +1,14 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+
+var sqlite3 = require('sqlite3').verbose();
+let db = new sqlite3.Database('animeretardia.sqlite', (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+  console.log('Connected to the animeretardia database.');
+});
+
 const MH_GUILD_ID = '270727104319062026';
 
 const user_list={"Lier": "270723318427025418",//Lier
@@ -49,9 +58,23 @@ client.on("message", async message => {
         const args = message.content.slice(1).trim().split(/ +/g);
         const command = args.shift().toLowerCase();
         switch(command){
-            case 'games': 
-            message.channel.send("В лол скатайте");
-            break;
+            case 'games':{
+                if (args.length==0){
+                    message.channel.send("В лол скатайте");
+                    break;
+                }
+                if (args[0]=="coop"){
+                db.all(`SELECT * FROM games_features WHERE CategoryCoop='True' ORDER BY RANDOM() LIMIT 1;`, [], (err, rows) => {
+                    if (err) {
+                      throw err;
+                    }
+                    console.log(rows);
+                    message.channel.send(rows[0].QueryName+" http://steamcommunity.com/app/"+rows[0].QueryID);
+                  });
+                break;
+                }
+            }
+
         }
         return;
     }
