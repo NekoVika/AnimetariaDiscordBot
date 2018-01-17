@@ -68,7 +68,7 @@ client.on("message", async message => {
                     if (err) {
                       throw err;
                     }
-                    console.log(rows);
+                    //console.log(rows);
                     message.channel.send(rows[0].QueryName+" http://steamcommunity.com/app/"+rows[0].QueryID);
                   });
                 break;
