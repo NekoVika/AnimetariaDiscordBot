@@ -61,9 +61,8 @@ client.on("message", async message => {
             case 'games':{
                 if (args.length==0){
                     message.channel.send("В лол скатайте");
-                    break;
                 }
-                if (args[0]=="coop"){
+                else if (args[0]=="coop"){
                 db.all(`SELECT * FROM games_features WHERE CategoryCoop='True' ORDER BY RANDOM() LIMIT 1;`, [], (err, rows) => {
                     if (err) {
                       throw err;
