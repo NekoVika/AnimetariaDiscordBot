@@ -102,7 +102,7 @@ client.on("message", async message => {
 });
 
 var fs = require('fs');
-code_l=removeEmptyLines(fs.readFileSync('./cd.txt').toString().reaplce(/\r?\n|\r/g,""))
+code_l=removeEmptyLines(fs.readFileSync('./cd.txt').toString().replace(/\r?\n|\r/g,""))
 client.login(code_l);
 
 
