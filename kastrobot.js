@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const removeEmptyLines = require("remove-blank-lines");
 
 var sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('animeretardia.sqlite', (err) => {
@@ -101,7 +102,7 @@ client.on("message", async message => {
 });
 
 var fs = require('fs');
-code_l=fs.readFileSync('cd.txt').toString()
+code_l=removeEmptyLines(fs.readFileSync('./cd.txt').toString())
 client.login(code_l);
 
 
