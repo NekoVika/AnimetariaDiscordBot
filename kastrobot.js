@@ -69,7 +69,7 @@ client.on("message", async message => {
                       throw err;
                     }
                     //console.log(rows);
-                    message.channel.send(rows[0].QueryName+" http://steamcommunity.com/app/"+rows[0].QueryID);
+                    message.channel.send(rows[0].QueryName+" http://store.steampowered.com/app/"+rows[0].QueryID);
                   });
                 break;
                 }
