@@ -18,9 +18,9 @@ const user_list={"Lier": "270723318427025418",//Lier
                  "Kaastro": "270974444871221259"//Volera
 }
 
-var kastrords = [/k(a*)tso/g,/k(a*)stro/g,/к(а*)стро/g,/к(а*)тсо/g];
+var kastrords = [/k(a*)tso\w*/gi,/k(a*)stro\w*/gi,/к(а*)стро\w*/gi,/к(а*)тсо\w*/gi];
 
-var madjords = [/madj/gi,/мадж/gi,/мудж/gi];
+var madjords = [/madj\w*/gi,/mudj\w*/gi,/мадж\w*/gi,/мудж\w*/gi];
 
 // Word parts for Mudj
 var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
