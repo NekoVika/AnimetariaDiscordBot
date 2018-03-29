@@ -28,6 +28,7 @@ var chopkords = [/ch[o|a|e]+pk\w*/gi,/ч[у|а|ю|я|о|е|ы|э|и|і|ё]+пк\
 var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
 var madj_2 = ["адж","нядж","идж","ядж","удж","юдж","ньдж","ажд","няжд","ижд","яжд","ужд","южд","ньжд"]
 
+var chopkrases = [", отпипись!", ", иди напип!"]
 
 client.on("ready", () => {
     client.user.setUsername("CHOPK");
@@ -97,7 +98,7 @@ client.on("message", async message => {
 
     for(i=0,x=chopkords.length;i<x;i++){
         if(message.content.toLowerCase().search(chopkords[i])>=0){            
-            message.channel.send(message.author.username+", отпипись!");
+            message.channel.send(message.author.username+chopkrases[Math.floor((Math.random() * chopkrases.length))]);
             break;
         };
     };
