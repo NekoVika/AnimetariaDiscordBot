@@ -22,7 +22,7 @@ var kastrords = [/k(a*)ts[^\s]+/gi,/k(a*)str[^\s]+/gi,/к(а*)стр[^\s]+/gi,/�
 
 var madjords = [/m[a|u|y]+dj\w*/gi,/м[у|а|ю|я|о|е|ы|э|и|і|ё]+дж\w*/gi];
 
-var chopkords = [/ch[o|a|e]+pk\w*/gi,/ч[у|а|ю|я|о|е|ы|э|и|і|ё]+пк\w*/gi];
+var chopkords = [/ch[o|a|e]+pk\w*/gi,/ч[у|а|ю|я|о|е|ы|э|и|і|ё]+пк\w*/gi,/сн[у|а|ю|я|о|е|ы|э|и|і|ё]+рк\w*/gi,/чп[у|а|ю|я|о|е|ы|э|и|і|ё]+к\w*/gi];
 
 // Word parts for Mudj
 var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
@@ -97,7 +97,7 @@ client.on("message", async message => {
 
     for(i=0,x=chopkords.length;i<x;i++){
         if(message.content.toLowerCase().search(chopkords[i])>=0){            
-            message.channel.send(message.author.username+" отпипись!");
+            message.channel.send(message.author.username+", отпипись!");
             break;
         };
     };
