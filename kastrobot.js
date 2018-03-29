@@ -18,9 +18,9 @@ const user_list={"Lier": "270723318427025418",//Lier
                  "Kaastro": "270974444871221259"//Volera
 }
 
-var kastrords = [/k(a*)tso\w*/gi,/k(a*)stro\w*/gi,/к(а*)стро\w*/gi,/к(а*)тсо\w*/gi];
+var kastrords = [/k(a*)ts[^\s]+/gi,/k(a*)str[^\s]+/gi,/к(а*)стр[^\s]+/gi,/к(а*)тс[^\s]+/gi,/в(а*)лер[^\s]+/gi,/v(a*)ler[^\s]+/gi];
 
-var madjords = [/madj\w*/gi,/mudj\w*/gi,/мадж\w*/gi,/мудж\w*/gi];
+var madjords = [/madj[^\s]+/gi,/mudj[^\s]+/gi,/мадж[^\s]+/gi,/мудж[^\s]+/gi];
 
 // Word parts for Mudj
 var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
@@ -41,7 +41,7 @@ client.on("ready", () => {
   });
 
 
-//todo on kaaastro login greet kaaastro
+
 client.on("presenceUpdate", (old, new_) => {
     if (Object.values(user_list).indexOf(new_.user.id)>=0){
         //console.log(old.presence.status, new_.presence.status, ['idle', 'online', 'dnd'].indexOf(new_.presence.status));
