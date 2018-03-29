@@ -20,7 +20,7 @@ const user_list={"Lier": "270723318427025418",//Lier
 
 var kastrords = [/k(a*)ts[^\s]+/gi,/k(a*)str[^\s]+/gi,/к(а*)стр[^\s]+/gi,/к(а*)тс[^\s]+/gi,/в(а*)лер[^\s]+/gi,/v(a*)ler[^\s]+/gi];
 
-var madjords = [/madj[^\s]+/gi,/mudj[^\s]+/gi,/мадж[^\s]+/gi,/мудж[^\s]+/gi];
+var madjords = [/m[a|u|y]+dj\w*/gi,/м[у|а|ю|я|о|е|ы|э|и|і]+дж\w*/gi,/мудж\w*/gi];
 
 // Word parts for Mudj
 var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
