@@ -18,7 +18,7 @@ const user_list={"Lier": "270723318427025418",//Lier
                  "Kaastro": "270974444871221259"//Volera
 }
 
-var kastrords = [/k(a*)ts[^\s]+/gi,/k(a*)str[^\s]+/gi,/к(а*)стр[^\s]+/gi,/к(а*)тс[^\s]+/gi,/в(а*)лер[^\s]+/gi,/v(a*)ler[^\s]+/gi];
+var kastrords = [/k(a+)ts/gi,/k(a+)str/gi,/к(а+)стр/gi,/к(а+)тс/gi,/в(а+)лер/gi,/v(a+)ler/gi];
 
 var madjords = [/m[a|u|y]+dj\w*/gi,/м[у|а|ю|я|о|е|ы|э|и|і|ё]+дж\w*/gi];
 
