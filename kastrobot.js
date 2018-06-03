@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const yaml = require("js-yaml");
 const client = new Discord.Client();
 const removeEmptyLines = require("remove-blank-lines");
 
@@ -28,9 +29,20 @@ var chopkords = [/ch[o|a|e]+pk\w*/gi,/ч[у|а|ю|я|о|е|ы|э|и|і|ё]+пк\
 var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
 var madj_2 = ["адж","нядж","идж","ядж","удж","юдж","ньдж","ажд","няжд","ижд","яжд","ужд","южд","ньжд"]
 
-var chopkrases = [", отпипись!", ", иди напип!"]
+
+var chopkrases = [", отпипись!", ", иди напип!"];
+
+// lines var
+var lines = {};
+
 
 client.on("ready", () => {
+
+    try {
+        lines = yaml.safeLoad(fs.readFileSync('etc/lines.yaml', 'utf8'));
+    } catch (e) {
+        console.log("Can't load lines yaml file. Reason: "+e);
+    }
     client.user.setUsername("CHOPK");
     MH_GUILD = client.guilds.get(MH_GUILD_ID);
     GUILD_CH = MH_GUILD.channels.find(ch => ch.name === 'guild');
@@ -58,7 +70,7 @@ client.on("presenceUpdate", (old, new_) => {
 });
 client.on("message", async message => {
     if(message.author.bot) return;
-    if (message.content.startsWith('!')){
+    if (message.content.startsWith('!')){  // TODO: this part also
         const args = message.content.slice(1).trim().split(/ +/g);
         const command = args.shift().toLowerCase();
         switch(command){
@@ -81,27 +93,50 @@ client.on("message", async message => {
         }
         return;
     }
-    for(i=0,x=kastrords.length;i<x;i++){
-        if(message.content.toLowerCase().search(kastrords[i])>=0){            
-            message.channel.send("Слався Кааастризм его великий! Да прибудет воля Кааастро!");
-            break;
-        };
-    };
+    var on_message = lines.on_message;
+    console.log(message.content);
+    on_message.forEach(block => {
+        var cond = block.conditions;
+        if (!Array.isArray(cond)) cond = [cond];
+        cond.forEach(elem => {
+            elem = new RegExp(elem, 'gi');  // FIXME: figure out this is regex
+            if(message.content.toLowerCase().search(elem) >=0 ){
+                var reac = block.answers,
+                    keys = block.keys;
+                if (!Array.isArray(reac)) reac = [reac];
+                var answer = reac[Math.floor(Math.random()*reac.length)];
+                console.log(keys);
+                if (keys != undefined){
+                    keys = reduce_dict(keys);
+                    answer = template_string(answer, keys);
+                }
+                message.channel.send(answer);
+            }
+        });
+    });
 
-    for(i=0,x=madjords.length;i<x;i++){
-        var found_w=message.content.match(madjords[i]);
-        if(found_w){
-            var right_madj = madj_1[Math.floor((Math.random() * madj_1.length))]+madj_2[Math.floor((Math.random() * madj_2.length))]
-            message.channel.send("`>>"+found_w[0]+"` Возможно, вы имели ввиду "+right_madj+"?");            
-        }
-    };
 
-    for(i=0,x=chopkords.length;i<x;i++){
-        if(message.content.toLowerCase().search(chopkords[i])>=0){            
-            message.channel.send(message.author.username+chopkrases[Math.floor((Math.random() * chopkrases.length))]);
-            break;
-        };
-    };
+    // for(i=0,x=kastrords.length;i<x;i++){
+    //     if(message.content.toLowerCase().search(kastrords[i])>=0){            
+    //         message.channel.send("Слався Кааастризм его великий! Да прибудет воля Кааастро!");
+    //         break;
+    //     };
+    // };
+
+    // for(i=0,x=madjords.length;i<x;i++){
+    //     var found_w=message.content.match(madjords[i]);
+    //     if(found_w){
+    //         var right_madj = madj_1[Math.floor((Math.random() * madj_1.length))]+madj_2[Math.floor((Math.random() * madj_2.length))]
+    //         message.channel.send("`>>"+found_w[0]+"` Возможно, вы имели ввиду "+right_madj+"?");            
+    //     }
+    // };
+
+    // for(i=0,x=chopkords.length;i<x;i++){
+    //     if(message.content.toLowerCase().search(chopkords[i])>=0){            
+    //         message.channel.send(message.author.username+chopkrases[Math.floor((Math.random() * chopkrases.length))]);
+    //         break;
+    //     };
+    // };
 
     
     // const words = message.content.trim().split(/ +/g);
@@ -109,6 +144,30 @@ client.on("message", async message => {
     // console.log(check_words);
 });
 
+var reduce_dict = function(dict){
+    var res = {};
+    for (var key in dict) {
+        if (dict.hasOwnProperty(key)) {
+            var items = dict[key];
+            if (!Array.isArray(items)) items = [items];
+            var item = items[Math.floor(Math.random()*items.length)];
+            res[key] = item;
+        }
+    }
+    return res;
+}
+
+var template_string = function(template, keys){
+    var result = template;
+    RE = /{(\w*)}/g
+    sk = template.match(RE);
+    sk.forEach( elem => {
+        var key = elem.replace(/{|}/g, ''), 
+            value = keys[key];
+        result = result.replace(elem, value);
+    });
+    return result;
+}
 var fs = require('fs');
 code_l=removeEmptyLines(fs.readFileSync('./cd.txt').toString().replace(/\r?\n|\r/g,""))
 client.login(code_l);
