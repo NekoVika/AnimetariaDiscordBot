@@ -19,53 +19,108 @@ const user_list={"Lier": "270723318427025418",//Lier
                  "Kaastro": "270974444871221259"//Volera
 }
 
-var kastrords = [/k(a+)ts/gi,/k(a+)str/gi,/к(а+)стр/gi,/к(а+)тс/gi,/в(а+)лер/gi,/v(a+)ler/gi];
-
-var madjords = [/m[a|u|y]+dj\w*/gi,/м[у|а|ю|я|о|е|ы|э|и|і|ё]+дж\w*/gi];
-
-var chopkords = [/ch[o|a|e]+pk\w*/gi,/ч[у|а|ю|я|о|е|ы|э|и|і|ё]+пк\w*/gi,/сн[у|а|ю|я|о|е|ы|э|и|і|ё]+рк\w*/gi,/чп[у|а|ю|я|о|е|ы|э|и|і|ё]+к\w*/gi];
-
-// Word parts for Mudj
-var madj_1 = ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
-var madj_2 = ["адж","нядж","идж","ядж","удж","юдж","ньдж","ажд","няжд","ижд","яжд","ужд","южд","ньжд"]
-
-
-var chopkrases = [", отпипись!", ", иди напип!"];
-
 // lines var
 var lines = {};
+var config = {};
 
+function id2name(id){
+    return Object.keys(USERS).find(key => USERS[key] === id);
+}
+
+function name2id(name){
+    return USERS[name];
+}
+
+function toArray(inst){
+    if (!Array.isArray(inst)) inst = [inst];
+    return inst;
+
+}
+
+function get_random_element(elements){
+    return elements[Math.floor(Math.random()*elements.length)];
+}
+
+
+function load_yaml(path){
+    try {
+        config = yaml.safeLoad(fs.readFileSync(path, 'utf8'));
+    } catch (e) {
+        config = {};
+        console.log("Can't load yaml file. Reason: "+e);
+    }
+    return config;
+}
+
+function configure(config){
+    client.user.setUsername(config['NAME']);
+    GUILD = client.guilds.get(config['GUILD_ID']);
+    CHANNELS = {};
+    var channels = config['CHANNELS'];
+    for (chan in channels){
+        CHANNELS[chan] = GUILD.channels.find(ch => ch.name === channels[chan]);
+    }
+    client.user.setGame(config['DEFAULT_GAME']);
+
+    USERS = config['USERS'];
+
+    ADDITIONAL = {};
+    var added = config['ADDITIONAL_LOAD'];
+    for (ad in added){
+        ADDITIONAL[ad] = load_yaml('etc/'+added[ad]+'.yaml') // FIXME: Ugly. Need more gracefull way to load added configs
+    }
+
+}
 
 client.on("ready", () => {
 
-    try {
-        lines = yaml.safeLoad(fs.readFileSync('etc/lines.yaml', 'utf8'));
-    } catch (e) {
-        console.log("Can't load lines yaml file. Reason: "+e);
-    }
-    client.user.setUsername("CHOPK");
-    MH_GUILD = client.guilds.get(MH_GUILD_ID);
-    GUILD_CH = MH_GUILD.channels.find(ch => ch.name === 'guild');
-    G_RANG_CH = MH_GUILD.channels.find(ch => ch.name === 'g-rank');
+    config = load_yaml('etc/config.yaml')
+    if (config){
+        configure(config);
+        // client.user.setUsername(config.get('NAME'));
+        // guild = client.guilds.get(config.get('GUILD_ID'));
 
-    // This event will run if the bot starts, and logs in, successfully.
-    console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
-    // Example of changing the bot's playing game to something useful. `client.user` is what the
-    // docs refer to as the "ClientUser".
-    client.user.setGame(`with himself`);
+        // var channels = config.get('channels');
+
+        // MH_GUILD = client.guilds.get(MH_GUILD_ID);
+        // GUILD_CH = MH_GUILD.channels.find(ch => ch.name === 'guild');
+        // G_RANG_CH = MH_GUILD.channels.find(ch => ch.name === 'g-rank');
+
+        // // This event will run if the bot starts, and logs in, successfully.
+        // console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
+        // // Example of changing the bot's playing game to something useful. `client.user` is what the
+        // // docs refer to as the "ClientUser".
+        // client.user.setGame(`with himself`);
+    }else{
+        // TODO: handle when there is no config
+    }
   });
 
 
 
 client.on("presenceUpdate", (old, new_) => {
-    if (Object.values(user_list).indexOf(new_.user.id)>=0){
-        //console.log(old.presence.status, new_.presence.status, ['idle', 'online', 'dnd'].indexOf(new_.presence.status));
-        if (old.presence.status == 'offline' && ['idle', 'online', 'dnd'].indexOf(new_.presence.status) >= 0){
-            G_RANG_CH.send(new_.user.username+' logged in!');
-            if (new_.user.id == user_list['Kaastro']){
-                GUILD_CH.send('Бажаємо здоров\'я, товаришу Кааастро!')
+    //if (Object.values(ADDITIONAL.users).indexOf(new_.user.id)>=0){
+        // Going online
+    var user_name = id2name(new_.user.id);
+    if (Object.keys(ADDITIONAL.lines.on_presence_update).indexOf(user_name)>=0 && 
+        old.presence.status == 'offline' && ['idle', 'online', 'dnd'].indexOf(new_.presence.status) >= 0){
+
+        var reaction = ADDITIONAL.lines.on_presence_update[user_name],
+            messages = toArray(reaction.messages);
+        
+        messages.forEach(mes => {
+            var channels = toArray(mes.channels),
+                answer = get_random_element(toArray(mes.answers)),
+                keys = mes.keys;
+            console.log('##', answer, keys);
+            if (keys != undefined){
+                keys = reduce_dict(keys);
+                answer = template_string(answer, keys);
             }
-        }
+            channels.forEach(ch => {
+                CHANNELS[ch].send(answer);
+            })
+        });
     }
 });
 client.on("message", async message => {
@@ -93,8 +148,8 @@ client.on("message", async message => {
         }
         return;
     }
-    var on_message = lines.on_message;
-    console.log(message.content);
+    // Answering to message by keywords
+    var on_message = ADDITIONAL.lines.on_message;
     on_message.forEach(block => {
         var cond = block.conditions;
         if (!Array.isArray(cond)) cond = [cond];
@@ -105,7 +160,6 @@ client.on("message", async message => {
                     keys = block.keys;
                 if (!Array.isArray(reac)) reac = [reac];
                 var answer = reac[Math.floor(Math.random()*reac.length)];
-                console.log(keys);
                 if (keys != undefined){
                     keys = reduce_dict(keys);
                     answer = template_string(answer, keys);
@@ -114,34 +168,6 @@ client.on("message", async message => {
             }
         });
     });
-
-
-    // for(i=0,x=kastrords.length;i<x;i++){
-    //     if(message.content.toLowerCase().search(kastrords[i])>=0){            
-    //         message.channel.send("Слався Кааастризм его великий! Да прибудет воля Кааастро!");
-    //         break;
-    //     };
-    // };
-
-    // for(i=0,x=madjords.length;i<x;i++){
-    //     var found_w=message.content.match(madjords[i]);
-    //     if(found_w){
-    //         var right_madj = madj_1[Math.floor((Math.random() * madj_1.length))]+madj_2[Math.floor((Math.random() * madj_2.length))]
-    //         message.channel.send("`>>"+found_w[0]+"` Возможно, вы имели ввиду "+right_madj+"?");            
-    //     }
-    // };
-
-    // for(i=0,x=chopkords.length;i<x;i++){
-    //     if(message.content.toLowerCase().search(chopkords[i])>=0){            
-    //         message.channel.send(message.author.username+chopkrases[Math.floor((Math.random() * chopkrases.length))]);
-    //         break;
-    //     };
-    // };
-
-    
-    // const words = message.content.trim().split(/ +/g);
-    // const check_words = words.shift().toLowerCase();
-    // console.log(check_words);
 });
 
 var reduce_dict = function(dict){
@@ -168,6 +194,8 @@ var template_string = function(template, keys){
     });
     return result;
 }
+
+
 var fs = require('fs');
 code_l=removeEmptyLines(fs.readFileSync('./cd.txt').toString().replace(/\r?\n|\r/g,""))
 client.login(code_l);

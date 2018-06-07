@@ -23,3 +23,18 @@ on_message:
        - "Иди напип"
        - "Запипал"
     
+on_presence_update: # TODO make in to any presense update
+  Kaastro:
+    messages:
+      - channels: grang
+        keys:
+          one:  ["Мун","Мня","Мин","Маа","Минин","Муа","Мюн"]
+          two: ["адж","нядж","идж","ядж","удж","юдж","ньдж","ажд","няжд","ижд","яжд","ужд","южд","ньжд"]
+        answers: 'HOHO {one} {two}'
+  Vika:
+    messages:
+      - channels: grang
+        keys:
+          who: [дура, бака, чирно] 
+        answers: 'Вика {who}'
+    

@@ -1,0 +1,18 @@
+NAME: CHOPK
+
+DEFAULT_GAME: with himself
+
+GUILD_ID : '270727104319062026'
+
+CHANNELS:
+  main: guild
+  grang: g-rank
+
+ADDITIONAL_LOAD:
+  lines: lines
+
+USERS:
+  Lier: "270723318427025418"
+  Vika: "270911343274491905"
+  Mudj: "271006635126816778"
+  Kaastro: "270974444871221259"
