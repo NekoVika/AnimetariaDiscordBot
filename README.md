@@ -2,7 +2,7 @@
 AnimetariaDiscordBot
 
 HOWTO:
-1. Install all requiriments by typing
+1. Install all requirements by typing
     
     ``npm install``
 
