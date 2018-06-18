@@ -112,7 +112,6 @@ client.on("presenceUpdate", (old, new_) => {
             var channels = toArray(mes.channels),
                 answer = get_random_element(toArray(mes.answers)),
                 keys = mes.keys;
-            console.log('##', answer, keys);
             if (keys != undefined){
                 keys = reduce_dict(keys);
                 answer = template_string(answer, keys);
