@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+import animebot
 
-setup(name='animebot',
-      version='0.1',
-      description='Animetardia Discord Bot',
-      author='RHT',
-      author_email='123',
-      packages=['animebot'],
-     )
+from setuptools import setup, find_packages
+
+setup(
+    name='animebot',
+    version=animebot.__version__,
+    description='Animetardia Discord Bot',
+    author='RHT',
+    author_email='123',
+    packages=find_packages(),
+    entry_points={
+        'console_scripts':
+            ['animebot = animebot.bot:main']
+        }
+)
