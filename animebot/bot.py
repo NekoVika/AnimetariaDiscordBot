@@ -1,28 +1,27 @@
 import discord
 import asyncio
 import yaml
-import re
-import random
+
 
 from pathlib import Path
 from animebot.tools import randomize, check_condition, reduce_keys, id2user, find_channel
+from animebot.chess.main import ChessGame
+from animebot.client import AnimeClient
 
-client = discord.Client()
+client = AnimeClient()
 
 PWD = Path('.')
 ETC_PATH = PWD / 'etc'
 LINES = yaml.safe_load((ETC_PATH / 'lines.yaml').open(mode='r', encoding='utf-8'))
 CONFIG = yaml.safe_load((ETC_PATH / 'config.yaml').open(mode='r', encoding='utf-8'))
-SERVER = None
 
 
 @client.event
 @asyncio.coroutine
 def on_ready():
-    global SERVER
     print('Logged in as')
     print(client.user.name)
-    SERVER = client.get_server(CONFIG.get('GUILD_ID'))
+    client.server = client.get_server(CONFIG.get('GUILD_ID'))
     yield from client.change_presence(game=discord.Game(name=CONFIG.get('DEFAULT_GAME')))
     print('------')
 
@@ -30,11 +29,26 @@ def on_ready():
 @client.event
 @asyncio.coroutine
 def on_message(message):
+    cnt = message.content
     if message.author == client.user:  # FIXME
+        return
+    if cnt.startswith('!chess'):
+        client.game = ChessGame()
+        return
+    if isinstance(client.game, ChessGame) and message.content.startswith('!move'):
+        move = cnt[6:].split(' ')
+        result = client.game.make_move(move)
+        if result['code'] == 1:
+            yield from client.send_message(message.channel, result['message'])
+        else:
+            yield from client.render_chess(message.channel, result['message'])
+        return
+    if cnt.startswith('!gameend'):
+        client.game = None
         return
     mlines = LINES.get('on_message', [])
     for mitem in mlines:
-        if any(map(lambda x: check_condition(message.content.lower(), x), mitem.get('conditions'))):
+        if any(map(lambda x: check_condition(cnt.lower(), x), mitem.get('conditions'))):
             answer = randomize(mitem.get('answers'))
             keys = mitem.get('keys')
             if keys:
@@ -62,24 +76,7 @@ def on_member_update(before, after):
                 for chan in channels:
                     channel = CONFIG.get('CHANNELS').get(chan)
                     if channel:
-                        yield from client.send_message(find_channel(SERVER, channel), answer)
-
-
-
-
-    # if message.content.startswith('!test'):
-    #     tmp = yield from client.send_message(message.channel, 'wolera')
-    #     print('###', tmp)
-    #     counter = 0
-    #     tmp = yield from client.send_message(message.channel, 'Calculating messages...')
-    #     for log in client.logs_from(message.channel, limit=100):
-    #         if log.author == message.author:
-    #             counter += 1
-    #
-    #     yield from client.edit_message(tmp, 'You have {} messages.'.format(counter))
-    # elif message.content.startswith('!sleep'):
-    #     yield from asyncio.sleep(5)
-    #     yield from client.send_message(message.channel, 'Done sleeping')
+                        yield from client.send_message(find_channel(client.server, channel), answer)
 
 
 def main():
