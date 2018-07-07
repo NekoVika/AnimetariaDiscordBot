@@ -4,12 +4,13 @@ import asyncio
 
 class AnimeClient(discord.Client):
     game = None
+
     @asyncio.coroutine
     def render_chess(self, channel, field):
         message = ''
         for x, col in enumerate(field):
             message += '|'
             for y, pos in enumerate(col):
-                message += pos.to_ascii() if pos is not None else '0'
+                message += pos
             message += '|\n'
         yield from self.send_message(channel, message)

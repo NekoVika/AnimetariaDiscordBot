@@ -1,5 +1,6 @@
 class ChessPiece(object):
-    ASCII = None
+    ASCII_white = None
+    ASCII_black = None
 
     def __init__(self, player):
         self.player = player
@@ -7,6 +8,9 @@ class ChessPiece(object):
 
     def check_move(self, to):
         pass
+
+    def __repr__(self):
+        return getattr(self, 'ASCII_{}'.format(self.player.color))
 
 
 class ChessPawn(ChessPiece):
