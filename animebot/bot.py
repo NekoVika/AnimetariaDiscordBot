@@ -7,6 +7,7 @@ from pathlib import Path
 from animebot.tools import randomize, check_condition, reduce_keys, id2user, find_channel
 from animebot.chess.main import ChessGame
 from animebot.client import AnimeClient
+from animebot.japanese.main import HiraganaQ
 
 client = AnimeClient()
 
@@ -32,6 +33,19 @@ def on_message(message):
     cnt = message.content
     if message.author == client.user:  # FIXME
         return
+    if message.channel.name == CONFIG.get('CHANNELS')['jap']:
+        if cnt.startswith('!hiragana'):
+            client.quiz = HiraganaQ()
+            yield from client.send_message(message.channel, " -  {}  - ".format(client.quiz.get_new()))
+        elif cnt.startswith('!stop'):
+            client.quiz = None
+            yield from client.send_message(message.channel, "Quiz stopped")
+        elif client.quiz is not None:
+            answer = client.quiz.check_lat(cnt)
+            new_s = client.quiz.get_new()
+            mess = "Right\n\n -  {}  -".format(new_s) if answer == 0 \
+                else "Wrong. It is '{}'\n\n -  {}  -".format(answer, new_s)
+            yield from client.send_message(message.channel, mess)
     if cnt.startswith('!chess'):
         client.game = ChessGame()
         return
