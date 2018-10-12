@@ -4,6 +4,7 @@ import asyncio
 
 class AnimeClient(discord.Client):
     game = None
+    quiz = None
 
     @asyncio.coroutine
     def render_chess(self, channel, field):
