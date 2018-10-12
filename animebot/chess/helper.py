@@ -18,5 +18,8 @@ class Point(object):
     def __str__(self):
         return 'p({} {})'.format(self.x, self.y)
 
+    def __repr__(self):
+        return str(self)
+
     def __bool__(self):
         return 0 <= self.x <= 7 and 0 <= self.y <= 7

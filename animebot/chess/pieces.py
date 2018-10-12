@@ -64,7 +64,22 @@ class ChessBishop(ChessPiece):
         super(ChessBishop, self).__init__(*args, **kwargs)
 
     def viable_moves(self):
-        return
+        all_moves = []
+        for i in range(1, 9):
+            moves = filter(bool, [self.position+Point(i, i), self.position+Point(i, -i),
+                                  self.position+Point(-i, i), self.position+Point(-i, -i)])
+            if not moves:
+                break
+            all_moves.extend(moves)
+        return all_moves
+
+    def validate_move(self, to, field):
+        vm = self.viable_moves()
+        # cell_to = field.get_by_coord(to)
+        if to in vm and field.is_path_clear(self.position, to):
+
+            return True
+        return False
 
 
 class ChessKnight(ChessPiece):
@@ -84,7 +99,7 @@ class ChessKnight(ChessPiece):
 
     def validate_move(self, to, field):
         vm = self.viable_moves()
-        if to in vm:
+        if to in vm  and field.is_path_clear(self.position, to):
             return True
         return False
 
@@ -97,6 +112,21 @@ class ChessRook(ChessPiece):
     def __init__(self, *args, **kwargs):
         super(ChessRook, self).__init__(*args, **kwargs)
 
+    def viable_moves(self):
+        all_moves = []
+        for i in range(1, 9):
+            moves = filter(bool, [self.position+Point(i, 0), self.position+Point(-i, 0),
+                                  self.position+Point(0, i), self.position+Point(0, -i)])
+            if not moves:
+                break
+            all_moves.extend(moves)
+        return all_moves
+
+    def validate_move(self, to, field):
+        vm = self.viable_moves()
+        if to in vm:
+            return True
+        return False
 
 class ChessQueen(ChessPiece):
     ASCII_white = '♕'

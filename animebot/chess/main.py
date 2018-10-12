@@ -80,6 +80,8 @@ class ChessGame(object):
         if not piece.validate_move(to, self.field):
             return dict(code=1, message="You can't move {} like this".format(piece))
 
+        self.field.move(fr, to)
+
         # self.field.move(fr, to)
         return dict(code=0, message=self.field.ascii())  # debugging
 
@@ -117,6 +119,8 @@ class ChessField(object):
 
     def is_path_clear(self, fr, to):
         beets = self.get_cell_between(fr, to)
+        if not beets:
+            return True
         return not(all(beets))
 
     def get_cell_between(self, fr, to):
