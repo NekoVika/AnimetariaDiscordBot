@@ -93,7 +93,7 @@ class ChessGame(object):
     def validate_spelling(self, move):
         if not (isinstance(move, (list, tuple)) and len(move) == 2):
             return False
-        return any(map(self.MOVE_RE.match, move))
+        return all(map(self.MOVE_RE.match, move))
 
 
 class ChessField(object):
@@ -209,4 +209,4 @@ class ChessPlayer(object):
         self.color = color
 
     def __str__(self):
-        return self.color
+        return 'Player {}'.format(self.color)

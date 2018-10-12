@@ -1,5 +1,5 @@
 class Point(object):
-    def __init__(self, x, y=None):
+    def __init__(self, x=0, y=None):
         if isinstance(x, Point):
             self.x, self.y = x.x, x.y
         else:
