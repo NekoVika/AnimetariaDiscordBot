@@ -20,12 +20,16 @@ def coord2id(coord):
 class ChessGame(object):
     MOVE_RE = re.compile(r'[abcdefgh][12345678]')
 
-    def __init__(self):
-        self.field = ChessField(self)
+    def __init__(self, custom_field=None):
         self.player1 = ChessPlayer('white', 1)
         self.player2 = ChessPlayer('black', -1)
-        self.prepare_field()
         self.current_player = self.player1
+
+        if custom_field is not None:
+            self.field = custom_field
+        else:
+            self.field = ChessField()
+            self.prepare_field()
 
     def prepare_field(self):   # FIXME: ugly?
         # player 1
@@ -100,8 +104,7 @@ class ChessField(object):
     letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     numbers = list(range(1, 9))
 
-    def __init__(self, game, *args):
-        self.game = game
+    def __init__(self, *args):
         self._field = []
         for i, l in enumerate(self.letters):
             for j, n in enumerate(self.numbers):
