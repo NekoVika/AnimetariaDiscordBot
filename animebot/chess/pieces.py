@@ -45,7 +45,7 @@ class ChessPawn(ChessPiece):
         if to in filter(bool, vm):
             if to == vm[0] and cell_to.piece is not None:
                 return False
-            if (to == vm[2] or to ==vm[3]) and cell_to is None:
+            if (to == vm[2] or to == vm[3]) and cell_to.piece is None:
                 return False
             if to == vm[1] and (not field.is_path_clear(self.position, to) or
                                 not ((self.position.y == 1 and self.player.mod == 1)

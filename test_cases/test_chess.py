@@ -51,10 +51,51 @@ class TestPieces(unittest.TestCase):
     def test_pawn_move_forward_freely(self):
         field = self.game.field
         field.init_piece('a1', self.game.player1, pieces.ChessPawn)
-        pawn = self.game.field.get_by_id('a1').piece
+        piece = self.game.field.get_by_id('a1').piece
         res = self.game.make_move(('a1', 'a2'))
         self.assertEqual(res['code'], 0)
-        self.assertEqual(self.game.field.get_by_id('a2').piece, pawn)
+        self.assertEqual(self.game.field.get_by_id('a2').piece, piece)
+
+    def test_pawn_move_forward_from_start_one_step(self):
+        field = self.game.field
+        field.init_piece('a2', self.game.player1, pieces.ChessPawn)
+        piece = self.game.field.get_by_id('a2').piece
+        res = self.game.make_move(('a2', 'a3'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('a3').piece, piece)
+
+    def test_pawn_move_forward_from_start_two_steps(self):
+        field = self.game.field
+        field.init_piece('a2', self.game.player1, pieces.ChessPawn)
+        piece = self.game.field.get_by_id('a2').piece
+        res = self.game.make_move(('a2', 'a4'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('a4').piece, piece)
+
+    # def test_pawn_move_diagonally_and_kill_enemy(self):
+    #     field = self.game.field
+    #     field.init_piece('a2', self.game.player1, pieces.ChessPawn)
+    #     field.init_piece('b3', self.game.player2, pieces.ChessPawn)
+    #     piece = self.game.field.get_by_id('a2').piece
+    #     res = self.game.make_move(('a2', 'b3'))
+    #     self.assertEqual(res['code'], 0)
+    #     self.assertEqual(self.game.field.get_by_id('b3').piece, piece)
+
+    def test_bishop_moves(self):
+        field = self.game.field
+        field.init_piece('a2', self.game.player1, pieces.ChessBishop)
+        piece = self.game.field.get_by_id('a2').piece
+        res = self.game.make_move(('a2', 'c4'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('c4').piece, piece)
+
+    def test_bishop_moves_wrong(self):
+        field = self.game.field
+        field.init_piece('a2', self.game.player1, pieces.ChessBishop)
+        piece = self.game.field.get_by_id('a2').piece
+        res = self.game.make_move(('a2', 'b4'))
+        self.assertEqual(res['code'], 1)
+        self.assertIsNone(self.game.field.get_by_id('c4').piece)
 
 
 class TestHelperPoint(unittest.TestCase):
