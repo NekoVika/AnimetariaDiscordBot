@@ -92,10 +92,72 @@ class TestPieces(unittest.TestCase):
     def test_bishop_moves_wrong(self):
         field = self.game.field
         field.init_piece('a2', self.game.player1, pieces.ChessBishop)
-        piece = self.game.field.get_by_id('a2').piece
         res = self.game.make_move(('a2', 'b4'))
         self.assertEqual(res['code'], 1)
         self.assertIsNone(self.game.field.get_by_id('c4').piece)
+
+    def test_rook_moves(self):
+        field = self.game.field
+        field.init_piece('a2', self.game.player1, pieces.ChessRook)
+        piece = self.game.field.get_by_id('a2').piece
+        res = self.game.make_move(('a2', 'a6'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('a6').piece, piece)
+
+    def test_rook_moves_wrong(self):
+        field = self.game.field
+        field.init_piece('a6', self.game.player1, pieces.ChessRook)
+        res = self.game.make_move(('a6', 'c4'))
+        self.assertEqual(res['code'], 1)
+        self.assertIsNone(self.game.field.get_by_id('c4').piece)
+
+    def test_knight_moves_1(self):
+        field = self.game.field
+        field.init_piece('d5', self.game.player1, pieces.ChessKnight)
+        piece = self.game.field.get_by_id('d5').piece
+        res = self.game.make_move(('d5', 'f6'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('f6').piece, piece)
+
+    def test_knight_moves_2(self):
+        field = self.game.field
+        field.init_piece('d4', self.game.player1, pieces.ChessKnight)
+        piece = self.game.field.get_by_id('d4').piece
+        res = self.game.make_move(('d4', 'e6'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('e6').piece, piece)
+
+    def test_knight_moves_3(self):
+        field = self.game.field
+        field.init_piece('c8', self.game.player1, pieces.ChessKnight)
+        piece = self.game.field.get_by_id('c8').piece
+        res = self.game.make_move(('c8', 'b6'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('b6').piece, piece)
+
+    def test_knight_moves_wrong(self):
+        field = self.game.field
+        field.init_piece('c8', self.game.player1, pieces.ChessKnight)
+        piece = self.game.field.get_by_id('c8').piece
+        res = self.game.make_move(('c8', 'b1'))
+        self.assertEqual(res['code'], 1)
+        self.assertIsNone(self.game.field.get_by_id('b1').piece)
+
+    def test_queen_moves_1(self):
+        field = self.game.field
+        field.init_piece('d5', self.game.player1, pieces.ChessQueen)
+        piece = self.game.field.get_by_id('d5').piece
+        res = self.game.make_move(('d5', 'd7'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('d7').piece, piece)
+
+    def test_queen_moves_2(self):
+        field = self.game.field
+        field.init_piece('d5', self.game.player1, pieces.ChessQueen)
+        piece = self.game.field.get_by_id('d5').piece
+        res = self.game.make_move(('d5', 'f6'))
+        self.assertEqual(res['code'], 0)
+        self.assertEqual(self.game.field.get_by_id('f6').piece, piece)
 
 
 class TestHelperPoint(unittest.TestCase):
