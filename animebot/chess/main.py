@@ -74,7 +74,6 @@ class ChessGame(object):
     def make_move(self, move):
         if not self.validate_spelling(move):
             return dict(code=1, message="Not valid move")
-        print('Move', *move)
         fr, to = id2coord(move[0]), id2coord(move[1])
         piece = self.field.get_by_coord(fr).piece
 

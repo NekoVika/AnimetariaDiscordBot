@@ -14,7 +14,7 @@ else:
         message += '|\n'
     print(message)
 
-r = game.make_move(['c1', 'b7'])
+r = game.make_move(['c1', 'd2'])
 if r['code'] != 0:
     print('!', r['message'])
 

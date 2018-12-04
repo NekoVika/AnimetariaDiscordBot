@@ -1,5 +1,22 @@
+import sys
 from copy import deepcopy
 from .helper import Point
+
+ABBR = {
+    'P': 'ChessPawn',
+    'R': 'ChessRook',
+    'N': 'ChessKnight',
+    'B': 'ChessBishop',
+    'K': 'ChessKing',
+    'Q': 'ChessQueen',
+}
+
+def put_piece(piece, color='white'):
+    if len(piece) == 1:
+        color = 'black' if piece.isupper() else 'white'
+        piece = ABBR[piece.upper()]
+    module = sys.modules[__name__]
+    return module.__dict__[piece]()
 
 
 class ChessPiece(object):
@@ -12,8 +29,33 @@ class ChessPiece(object):
         self.player.figures.append(self)
         self.position = position
 
-    def viable_moves(self):  # FIXME: merge this into validation maybe
-        return []
+    def _viable_moves(self, field, diagonal=False, orthogonal=False, radius=8):  # FIXME: merge this into validation maybe
+        viable_moves = []
+        orth = ((-1, 0), (0, -1), (0, 1), (1, 0))
+        diag = ((-1, -1), (-1, 1), (1, -1), (1, 1))
+        if diagonal:
+            moves = diag
+        elif orthogonal:
+            moves = orth
+        else:
+            moves = diag + orth
+
+        for x, y in moves:
+            for step in range(1, radius+1):
+                dest = self.position + Point(step*x, step*y)
+                try:
+                    dest_cell = field.get_by_coord(dest)
+                except IndexError:
+                    continue
+                if not dest_cell:
+                    viable_moves.append(dest)
+                elif dest_cell.piece.player == self.player:
+                    break
+                else:
+                    viable_moves.append(dest)
+                    break
+
+        return filter(bool, viable_moves)
 
     def validate_move(self, to, field):
         return False
@@ -33,14 +75,14 @@ class ChessPawn(ChessPiece):
     def __init__(self, *args, **kwargs):
         super(ChessPawn, self).__init__(*args, **kwargs)
 
-    def viable_moves(self):
+    def viable_moves(self, field):
         return [self.position + Point(0, 1 * self.player.mod),
                 self.position + Point(0, 2 * self.player.mod),
                 self.position + Point(-1, 1 * self.player.mod),
                 self.position + Point(1, 1 * self.player.mod)]
 
     def validate_move(self, to, field):  # FIXME
-        vm = self.viable_moves()
+        vm = self.viable_moves(field)
         cell_to = field.get_by_coord(to)
         if to in filter(bool, vm):
             if to == vm[0] and cell_to.piece is not None:
@@ -63,18 +105,19 @@ class ChessBishop(ChessPiece):
     def __init__(self, *args, **kwargs):
         super(ChessBishop, self).__init__(*args, **kwargs)
 
-    def viable_moves(self):
-        all_moves = []
-        for i in range(1, 9):
-            moves = filter(bool, [self.position+Point(i, i), self.position+Point(i, -i),
-                                  self.position+Point(-i, i), self.position+Point(-i, -i)])
-            if not moves:
-                break
-            all_moves.extend(moves)
-        return all_moves
+    def viable_moves(self, field):
+        return self._viable_moves(field, True, False)
+        # all_moves = []
+        # for i in range(1, 9):
+        #     moves = filter(bool, [self.position+Point(i, i), self.position+Point(i, -i),
+        #                           self.position+Point(-i, i), self.position+Point(-i, -i)])
+        #     if not moves:
+        #         break
+        #     all_moves.extend(moves)
+        # return all_moves
 
     def validate_move(self, to, field):
-        vm = self.viable_moves()
+        vm = self.viable_moves(field)
         # cell_to = field.get_by_coord(to)
         if to in vm and field.is_path_clear(self.position, to):
 
@@ -90,7 +133,7 @@ class ChessKnight(ChessPiece):
     def __init__(self, *args, **kwargs):
         super(ChessKnight, self).__init__(*args, **kwargs)
 
-    def viable_moves(self):
+    def viable_moves(self, field):
         return filter(bool, [self.position + Point(1, 2), self.position + Point(-1, 2),
                              self.position + Point(2, 1), self.position + Point(-2, 1),
                              self.position + Point(2, -1), self.position + Point(-2, -1),
@@ -98,7 +141,7 @@ class ChessKnight(ChessPiece):
                              ])
 
     def validate_move(self, to, field):
-        vm = self.viable_moves()
+        vm = self.viable_moves(field)
         if to in vm and field.is_path_clear(self.position, to):
             return True
         return False
@@ -112,19 +155,11 @@ class ChessRook(ChessPiece):
     def __init__(self, *args, **kwargs):
         super(ChessRook, self).__init__(*args, **kwargs)
 
-    def viable_moves(self):
-        all_moves = []
-        for i in range(1, 9):
-            moves = filter(bool, [self.position+Point(i, 0), self.position+Point(-i, 0),
-                                  self.position+Point(0, i), self.position+Point(0, -i)
-                                  ])
-            if not moves:
-                break
-            all_moves.extend(moves)
-        return all_moves
+    def viable_moves(self, field):
+        return self._viable_moves(field, False, True)
 
     def validate_move(self, to, field):
-        vm = self.viable_moves()
+        vm = self.viable_moves(field)
         if to in vm and field.is_path_clear(self.position, to):
             return True
         return False
@@ -135,21 +170,11 @@ class ChessQueen(ChessPiece):
     ASCII_black = '♛'
     name = 'queen'
 
-    def viable_moves(self):
-        all_moves = []
-        for i in range(1, 9):
-            moves = filter(bool, [self.position + Point(i, 0), self.position + Point(-i, 0),
-                                  self.position + Point(0, i), self.position + Point(0, -i),
-                                  self.position + Point(i, i), self.position + Point(i, -i),
-                                  self.position + Point(-i, i), self.position + Point(-i, -i)
-                                  ])
-            if not moves:
-                break
-            all_moves.extend(moves)
-        return all_moves
+    def viable_moves(self, field):
+        return self._viable_moves(field, True, True)
 
     def validate_move(self, to, field):
-        vm = self.viable_moves()
+        vm = self.viable_moves(field)
         if to in vm and field.is_path_clear(self.position, to):
             return True
         return False
@@ -162,6 +187,9 @@ class ChessKing(ChessPiece):
     ASCII_white = '♔'
     ASCII_black = '♚'
     name = 'king'
+
+    def viable_moves(self, field):
+        return self._viable_moves(field, True, True, 1)
 
     def __init__(self, *args, **kwargs):
         super(ChessKing, self).__init__(*args, **kwargs)

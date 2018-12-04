@@ -155,9 +155,9 @@ class TestPieces(unittest.TestCase):
         field = self.game.field
         field.init_piece('d5', self.game.player1, pieces.ChessQueen)
         piece = self.game.field.get_by_id('d5').piece
-        res = self.game.make_move(('d5', 'f6'))
+        res = self.game.make_move(('d5', 'e6'))
         self.assertEqual(res['code'], 0)
-        self.assertEqual(self.game.field.get_by_id('f6').piece, piece)
+        self.assertEqual(self.game.field.get_by_id('e6').piece, piece)
 
 
 class TestHelperPoint(unittest.TestCase):
