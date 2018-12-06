@@ -23,3 +23,9 @@ class Point(object):
 
     def __bool__(self):
         return 0 <= self.x <= 7 and 0 <= self.y <= 7
+
+
+def another_color(color):
+    if not color in ('black', 'white'):
+        raise TypeError("Wrong color")
+    return 'white' if color == 'black' else 'black'

@@ -50,7 +50,7 @@ class TestPieces(unittest.TestCase):
 
     def test_pawn_move_forward_freely(self):
         field = self.game.field
-        field.init_piece('a1', self.game.player1, pieces.ChessPawn)
+        field.init_piece('a1', 'p')
         piece = self.game.field.get_by_id('a1').piece
         res = self.game.make_move(('a1', 'a2'))
         self.assertEqual(res['code'], 0)
@@ -58,7 +58,7 @@ class TestPieces(unittest.TestCase):
 
     def test_pawn_move_forward_from_start_one_step(self):
         field = self.game.field
-        field.init_piece('a2', self.game.player1, pieces.ChessPawn)
+        field.init_piece('a2', 'p')
         piece = self.game.field.get_by_id('a2').piece
         res = self.game.make_move(('a2', 'a3'))
         self.assertEqual(res['code'], 0)
@@ -66,7 +66,7 @@ class TestPieces(unittest.TestCase):
 
     def test_pawn_move_forward_from_start_two_steps(self):
         field = self.game.field
-        field.init_piece('a2', self.game.player1, pieces.ChessPawn)
+        field.init_piece('a2', 'p')
         piece = self.game.field.get_by_id('a2').piece
         res = self.game.make_move(('a2', 'a4'))
         self.assertEqual(res['code'], 0)
@@ -83,7 +83,7 @@ class TestPieces(unittest.TestCase):
 
     def test_bishop_moves(self):
         field = self.game.field
-        field.init_piece('a2', self.game.player1, pieces.ChessBishop)
+        field.init_piece('a2', 'b')
         piece = self.game.field.get_by_id('a2').piece
         res = self.game.make_move(('a2', 'c4'))
         self.assertEqual(res['code'], 0)
@@ -91,14 +91,14 @@ class TestPieces(unittest.TestCase):
 
     def test_bishop_moves_wrong(self):
         field = self.game.field
-        field.init_piece('a2', self.game.player1, pieces.ChessBishop)
+        field.init_piece('a2', 'b')
         res = self.game.make_move(('a2', 'b4'))
         self.assertEqual(res['code'], 1)
         self.assertIsNone(self.game.field.get_by_id('c4').piece)
 
     def test_rook_moves(self):
         field = self.game.field
-        field.init_piece('a2', self.game.player1, pieces.ChessRook)
+        field.init_piece('a2', 'r')
         piece = self.game.field.get_by_id('a2').piece
         res = self.game.make_move(('a2', 'a6'))
         self.assertEqual(res['code'], 0)
@@ -106,14 +106,14 @@ class TestPieces(unittest.TestCase):
 
     def test_rook_moves_wrong(self):
         field = self.game.field
-        field.init_piece('a6', self.game.player1, pieces.ChessRook)
+        field.init_piece('a6', 'r')
         res = self.game.make_move(('a6', 'c4'))
         self.assertEqual(res['code'], 1)
         self.assertIsNone(self.game.field.get_by_id('c4').piece)
 
     def test_knight_moves_1(self):
         field = self.game.field
-        field.init_piece('d5', self.game.player1, pieces.ChessKnight)
+        field.init_piece('d5', 'n')
         piece = self.game.field.get_by_id('d5').piece
         res = self.game.make_move(('d5', 'f6'))
         self.assertEqual(res['code'], 0)
@@ -121,7 +121,7 @@ class TestPieces(unittest.TestCase):
 
     def test_knight_moves_2(self):
         field = self.game.field
-        field.init_piece('d4', self.game.player1, pieces.ChessKnight)
+        field.init_piece('d4', 'n')
         piece = self.game.field.get_by_id('d4').piece
         res = self.game.make_move(('d4', 'e6'))
         self.assertEqual(res['code'], 0)
@@ -129,7 +129,7 @@ class TestPieces(unittest.TestCase):
 
     def test_knight_moves_3(self):
         field = self.game.field
-        field.init_piece('c8', self.game.player1, pieces.ChessKnight)
+        field.init_piece('c8', 'n')
         piece = self.game.field.get_by_id('c8').piece
         res = self.game.make_move(('c8', 'b6'))
         self.assertEqual(res['code'], 0)
@@ -137,15 +137,15 @@ class TestPieces(unittest.TestCase):
 
     def test_knight_moves_wrong(self):
         field = self.game.field
-        field.init_piece('c8', self.game.player1, pieces.ChessKnight)
-        piece = self.game.field.get_by_id('c8').piece
+        field.init_piece('c8', 'n')
+        # piece = self.game.field.get_by_id('c8').piece
         res = self.game.make_move(('c8', 'b1'))
         self.assertEqual(res['code'], 1)
         self.assertIsNone(self.game.field.get_by_id('b1').piece)
 
     def test_queen_moves_1(self):
         field = self.game.field
-        field.init_piece('d5', self.game.player1, pieces.ChessQueen)
+        field.init_piece('d5', 'q')
         piece = self.game.field.get_by_id('d5').piece
         res = self.game.make_move(('d5', 'd7'))
         self.assertEqual(res['code'], 0)
@@ -153,7 +153,7 @@ class TestPieces(unittest.TestCase):
 
     def test_queen_moves_2(self):
         field = self.game.field
-        field.init_piece('d5', self.game.player1, pieces.ChessQueen)
+        field.init_piece('d5', 'q')
         piece = self.game.field.get_by_id('d5').piece
         res = self.game.make_move(('d5', 'e6'))
         self.assertEqual(res['code'], 0)
