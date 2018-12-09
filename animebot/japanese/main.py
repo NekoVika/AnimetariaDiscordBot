@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import random
+from random import shuffle
 from animebot.tools import randomize
-hiralatdict = {
+hiradict = {
     "あ": "a",
     "い": "i",
     "う": "u",
@@ -77,22 +77,26 @@ hiralatdict = {
 
 
 def lat2hira(l):
-    for key, value in hiralatdict.items():
+    for key, value in hiradict.items():
         if value == l:
             return key
 
 
 def hira2lat(h):
-    return hiralatdict.get(h, None)
+    return hiradict.get(h, None)
 
 
 class HiraganaQ:
-    def __init__(self):
+    def __init__(self, count=None):
+        self.count = count or len(hiradict)
+        self.listing = list(hiradict.keys())
+        self.listing = shuffle(list(hiradict.keys()))[:self.count]
         self.current = None
 
     def get_new(self):
-        self.current = randomize(list(hiralatdict.keys()))
-        return self.current
+        self.current = randomize(self.listing)
+        self.listing.remove(self.current)
+        return self.current, len(self.listing)
 
     def check_lat(self, lat):
         right_answer = hira2lat(self.current)

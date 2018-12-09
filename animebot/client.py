@@ -5,6 +5,11 @@ import asyncio
 class AnimeClient(discord.Client):
     game = None
     quiz = None
+    mplayer = None
+
+    def __init__(self, *args, **kwargs):
+        self.music_queue = []
+        super(AnimeClient, self).__init__(*args, **kwargs)
 
     @asyncio.coroutine
     def render_chess(self, channel, field):

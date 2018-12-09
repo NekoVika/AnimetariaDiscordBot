@@ -8,6 +8,8 @@ CHANNELS:
   main: guild
   grang: g-rank
   jap: japanese
+  music: music_bot
+  vmusic: music
 
 USERS:
   Lier: "270723318427025418"
