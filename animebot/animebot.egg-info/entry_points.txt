@@ -1,3 +1,0 @@
-[console_scripts]
-animebot = animebot.bot:main
-
