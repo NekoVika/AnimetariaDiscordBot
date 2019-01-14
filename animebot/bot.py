@@ -1,7 +1,7 @@
 import discord
 import asyncio
 import yaml
-
+import traceback
 
 from pathlib import Path
 from animebot.tools import randomize, check_condition, reduce_keys, id2user, find_channel
@@ -78,7 +78,9 @@ def handle_music(message):
             voice = client.voice_client_in(client.server)
             yield from voice.disconnect()
     except Exception as E:
-        yield from client.send_message(message.channel, "Error: {}".format(E))
+        print('Error in music handling: {}'.format(E))
+        traceback.print_exc()
+        # yield from client.send_message(message.channel, "Error: {}".format(E))
 
 
 @client.event
@@ -153,6 +155,7 @@ def on_member_update(before, after):
                             yield from client.send_message(find_channel(client.server, channel), answer)
     except Exception as E:
         print('Error on_member_update, {}'.format(E))
+        traceback.print_exc()
 
 
 def main():
