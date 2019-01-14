@@ -1,5 +1,7 @@
 import discord
 import asyncio
+from sqlite3 import dbapi2 as sqlite
+from sqlalchemy import create_engine
 
 
 class AnimeClient(discord.Client):
@@ -8,7 +10,8 @@ class AnimeClient(discord.Client):
     mplayer = None
 
     def __init__(self, *args, **kwargs):
-        self.music_queue = []
+        self.config = kwargs.pop("config", {})
+        # self.db = create_engine('sqlite+pysqlite:///.animebot.db', module=sqlite)
         super(AnimeClient, self).__init__(*args, **kwargs)
 
     @asyncio.coroutine

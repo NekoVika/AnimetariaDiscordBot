@@ -101,22 +101,9 @@ class ChessPawn(ChessPiece):
                 viable_moves.append(enemy_dest)
         return viable_moves
 
-
     def validate_move(self, to, field):  # FIXME
         vm = self.viable_moves(field)
         return to in vm
-        # cell_to = field.get_by_coord(to)
-        # if to in filter(bool, vm):
-        #     if to == vm[0] and cell_to.piece is not None:
-        #         return False
-        #     if (to == vm[2] or to == vm[3]) and cell_to.piece is None:
-        #         return False
-        #     if to == vm[1] and (not field.is_path_clear(self.position, to) or
-        #                         not ((self.position.y == 1 and self.player.mod == 1)
-        #                              or (self.position.y == 7 and self.player.mod == -1))):
-        #         return False
-        #     return True
-        # return False
 
 
 class ChessBishop(ChessPiece):
@@ -159,7 +146,6 @@ class ChessKnight(ChessPiece):
     def validate_move(self, to, field):
         vm = self.viable_moves(field)
         return to in vm
-
 
 
 class ChessRook(ChessPiece):

@@ -9,13 +9,14 @@ from animebot.chess.main import ChessGame
 from animebot.client import AnimeClient
 from animebot.japanese.main import HiraganaQ
 
-client = AnimeClient()
+
 
 PWD = Path('.')
 ETC_PATH = PWD / 'etc'
 LINES = yaml.safe_load((ETC_PATH / 'lines.yaml').open(mode='r', encoding='utf-8'))
 CONFIG = yaml.safe_load((ETC_PATH / 'config.yaml').open(mode='r', encoding='utf-8'))
 
+client = AnimeClient(config=CONFIG)
 
 @client.event
 @asyncio.coroutine
@@ -25,6 +26,7 @@ def on_ready():
     client.server = client.get_server(CONFIG.get('GUILD_ID'))
     yield from client.change_presence(game=discord.Game(name=CONFIG.get('DEFAULT_GAME')))
     print('------')
+
 
 @asyncio.coroutine
 def _mplayer_teardown():
