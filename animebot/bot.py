@@ -56,31 +56,13 @@ def _play_music(url, channel=None):
 def handle_music(message):
     cnt = message.content
     user_channel = message.author.voice.voice_channel
-    try:
-        if cnt.startswith('!join'):
-            yield from client.join_voice_channel(user_channel)
-        elif cnt.startswith('!play'):
-            contents = cnt.split(' ')
-            if len(contents) != 2:
-                raise IndexError('Wrong command')
-            _, url = contents
-            yield from _play_music(url, user_channel)
-        elif cnt.startswith('!pause') and client.mplayer:
-            yield from client.mplayer.pause()
-        elif cnt.startswith('!resume') and client.mplayer:
-            yield from client.mplayer.resume()
-        elif cnt.startswith('!stop') and client.mplayer:
-            yield from client.mplayer.stop()
-            #_mplayer_teardown()
-        elif cnt == '!queue' and client.mplayer:
-            yield from client.send_message(message.channel, "Youtube links:\n"+'\n'.join(client.music_queue))
-        elif cnt.startswith('!leave') and client.is_voice_connected(client.server):
-            voice = client.voice_client_in(client.server)
-            yield from voice.disconnect()
-    except Exception as E:
-        print('Error in music handling: {}'.format(E))
-        traceback.print_exc()
-        # yield from client.send_message(message.channel, "Error: {}".format(E))
+    #try:
+    yield from client.music_player.handle(cnt, user_channel)
+    # except Exception as E:
+    #     print('Error in music handling: {}'.format(E))
+    #     traceback.print_exc()
+    #     # yield from client.send_message(message.channel, "Error: {}".format(E))
+
 
 
 @client.event

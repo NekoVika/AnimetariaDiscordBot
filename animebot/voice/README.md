@@ -1,12 +1,14 @@
-[] playlist
-[] db
-[] refactor to this module
+- [ ] playlist
+- [ ] db
+- [X] refactor to this module
+- [ ] radio
+- [ ] youtube playlist
 
 !play [youtube_link string]
 input: music_player object, youtube_link string
 workflow: 
     check if youtube_link is correct
-        if fasle: exit
+        if false: exit
     check if music_player.player is alive
         if true:
             kill music_player.player
