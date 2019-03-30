@@ -75,7 +75,6 @@ class MusicPlayer:
 
     @asyncio.coroutine
     def handle(self, message, channel):
-        print('====', message, channel)
         if not self.validate(message):
             return
         # TODO: this command not belong to music client
