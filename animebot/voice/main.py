@@ -1,6 +1,7 @@
 import asyncio
 import asgiref
 
+
 def _teardown():
     print('!!!teadown!!!')
 
@@ -21,17 +22,21 @@ class MusicPlayer:
         return True
 
     def validate_url(self, link):
+        # TODO
+        print('TODO: validate url')
         return True
 
     def _join_bot(self, channel):
         self.voice = yield from self.parent.join_voice_channel(channel)
 
     def _leave_bot(self):
-        self.voice.disconnect()
+        yield from self.voice.disconnect()
         self.voice = None
 
     @asyncio.coroutine
     def _create_ytpl(self):
+        if not self.voice:
+            raise Exception("Not joined to any channel")
         self.mplayer = yield from self.voice.create_ytdl_player(self.current_song)
 
     @asyncio.coroutine
@@ -108,24 +113,3 @@ class MusicPlayer:
             yield from self._resume()
         elif message.startswith('!next'):
             yield from self._next()
-        # if message.startswith('!join'):
-        #     yield from self.parent.join_voice_channel(channel)
-        # elif message.startswith('!play'):
-        #     contents = message.split(' ')
-        #     if len(contents) != 2:
-        #         raise IndexError('Wrong command')
-        #     _, url = contents
-        #     yield from _play_music(url, user_channel)
-        # elif message.startswith('!pause') and client.mplayer:
-        #     yield from client.mplayer.pause()
-        # elif message.startswith('!resume') and client.mplayer:
-        #     yield from client.mplayer.resume()
-        # elif message.startswith('!stop') and client.mplayer:
-        #     yield from client.mplayer.stop()
-        #     #_mplayer_teardown()
-        # elif message == '!queue' and client.mplayer:
-        #     yield from client.send_message(message.channel, "Youtube links:\n"+'\n'.join(client.music_queue))
-        # elif message.startswith('!leave') and client.is_voice_connected(client.server):
-        #     voice = client.voice_client_in(client.server)
-        #     yield from voice.disconnect()
-

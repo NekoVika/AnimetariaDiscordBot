@@ -10,13 +10,13 @@ from animebot.client import AnimeClient
 from animebot.japanese.main import HiraganaQ
 
 
-
 PWD = Path('.')
 ETC_PATH = PWD / 'etc'
 LINES = yaml.safe_load((ETC_PATH / 'lines.yaml').open(mode='r', encoding='utf-8'))
 CONFIG = yaml.safe_load((ETC_PATH / 'config.yaml').open(mode='r', encoding='utf-8'))
 
 client = AnimeClient(config=CONFIG)
+
 
 @client.event
 @asyncio.coroutine
@@ -56,13 +56,12 @@ def _play_music(url, channel=None):
 def handle_music(message):
     cnt = message.content
     user_channel = message.author.voice.voice_channel
-    #try:
-    yield from client.music_player.handle(cnt, user_channel)
-    # except Exception as E:
-    #     print('Error in music handling: {}'.format(E))
-    #     traceback.print_exc()
-    #     # yield from client.send_message(message.channel, "Error: {}".format(E))
-
+    try:
+        yield from client.music_player.handle(cnt, user_channel)
+    except Exception as E:
+        print('Error in music handling: {}'.format(E))
+        traceback.print_exc()
+        # yield from client.send_message(message.channel, "Error: {}".format(E))
 
 
 @client.event
@@ -123,6 +122,8 @@ def on_member_update(before, after):
             on_presence = LINES.get('on_presence_update')
             if on_presence:
                 name = id2user(CONFIG.get('USERS'), before.id)
+                if not name:
+                    return
                 reactions = on_presence.get(name)['messages']
                 for react in reactions:
                     channels = react.get('channels')
@@ -136,7 +137,7 @@ def on_member_update(before, after):
                         if channel:
                             yield from client.send_message(find_channel(client.server, channel), answer)
     except Exception as E:
-        print('Error on_member_update, {}'.format(E))
+        print('Error on_member_update: {}'.format(E))
         traceback.print_exc()
 
 

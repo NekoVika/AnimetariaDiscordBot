@@ -3,6 +3,7 @@
 - [X] refactor to this module
 - [ ] radio
 - [ ] youtube playlist
+- [ ] save to db
 
 !play [youtube_link string]
 input: music_player object, youtube_link string
