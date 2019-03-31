@@ -24,7 +24,7 @@ on_message:
        - "Запипал"
        - "Ой всё"
 
-on_presence_update: # TODO make in to any presense update
+on_presence_update: # TODO make in to any presence update
   Kaastro:
     messages:
       - channels: grang
