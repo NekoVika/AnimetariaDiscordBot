@@ -10,7 +10,7 @@ from animebot.client import AnimeClient
 from animebot.japanese.main import HiraganaQ
 
 
-PWD = Path('.')
+PWD = Path(__file__).parent
 ETC_PATH = PWD / 'etc'
 LINES = yaml.safe_load((ETC_PATH / 'lines.yaml').open(mode='r', encoding='utf-8'))
 CONFIG = yaml.safe_load((ETC_PATH / 'config.yaml').open(mode='r', encoding='utf-8'))
