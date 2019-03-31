@@ -1,7 +1,8 @@
+
 cd.txt
 sapi.txt
 node_modules
 .*
 *.pyc
 ./*
-*.egg-info
+animebot.egg-info
