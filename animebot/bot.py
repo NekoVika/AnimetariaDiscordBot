@@ -2,6 +2,7 @@ import discord
 import asyncio
 import yaml
 import traceback
+import logging
 
 from pathlib import Path
 from animebot.tools import randomize, check_condition, reduce_keys, id2user, find_channel
@@ -9,8 +10,10 @@ from animebot.chess.main import ChessGame
 from animebot.client import AnimeClient
 from animebot.japanese.main import HiraganaQ
 
+logger = logging.getLogger(__name__)
 
-PWD = Path('.')
+
+PWD = Path(__file__).parent
 ETC_PATH = PWD / 'etc'
 LINES = yaml.safe_load((ETC_PATH / 'lines.yaml').open(mode='r', encoding='utf-8'))
 CONFIG = yaml.safe_load((ETC_PATH / 'config.yaml').open(mode='r', encoding='utf-8'))
@@ -21,16 +24,14 @@ client = AnimeClient(config=CONFIG)
 @client.event
 @asyncio.coroutine
 def on_ready():
-    print('Logged in as')
-    print(client.user.name)
+    logger.info('Logged in as {}'.format(client.user.name))
     client.server = client.get_server(CONFIG.get('GUILD_ID'))
     yield from client.change_presence(game=discord.Game(name=CONFIG.get('DEFAULT_GAME')))
-    print('------')
 
 
 @asyncio.coroutine
 def _mplayer_teardown():
-    print('teardown')
+    logger.debug('teardown')
     mqueue = client.music_queue
     if mqueue:
         yield from _play_music(mqueue.pop(0))
@@ -59,7 +60,7 @@ def handle_music(message):
     try:
         yield from client.music_player.handle(cnt, user_channel)
     except Exception as E:
-        print('Error in music handling: {}'.format(E))
+        logger.error('Error in music handling: {}'.format(E))
         traceback.print_exc()
         # yield from client.send_message(message.channel, "Error: {}".format(E))
 
@@ -137,7 +138,7 @@ def on_member_update(before, after):
                         if channel:
                             yield from client.send_message(find_channel(client.server, channel), answer)
     except Exception as E:
-        print('Error on_member_update: {}'.format(E))
+        logger.error('Error on_member_update: {}'.format(E))
         traceback.print_exc()
 
 
