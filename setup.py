@@ -13,6 +13,6 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts':
-            ['animebot = animebot.bot:main']
+            ['animebot = animebot:main']
         }
 )
