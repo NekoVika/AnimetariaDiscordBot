@@ -3,6 +3,7 @@ import asyncio
 import yaml
 import traceback
 import logging
+import argparse
 
 from pathlib import Path
 from animebot.tools import randomize, check_condition, reduce_keys, id2user, find_channel
@@ -11,14 +12,6 @@ from animebot.client import AnimeClient
 from animebot.japanese.main import HiraganaQ
 
 logger = logging.getLogger(__name__)
-
-
-PWD = Path(__file__).parent
-ETC_PATH = PWD / 'etc'
-LINES = yaml.safe_load((ETC_PATH / 'lines.yaml').open(mode='r', encoding='utf-8'))
-CONFIG = yaml.safe_load((ETC_PATH / 'config.yaml').open(mode='r', encoding='utf-8'))
-
-client = AnimeClient(config=CONFIG)
 
 
 @client.event
@@ -143,6 +136,18 @@ def on_member_update(before, after):
 
 
 def main():
+    global client
+    parser = argparse.ArgumentParser(description='Run animetardia bot')
+    parser.add_argument('config', metavar='N', type=str,
+                        help='path to config file', default='None')
+
+    PWD = Path(__file__).parent
+    ETC_PATH = PWD / 'etc'
+    LINES = yaml.safe_load((ETC_PATH / 'lines.yaml').open(mode='r', encoding='utf-8'))
+    CONFIG = yaml.safe_load((ETC_PATH / 'config.yaml').open(mode='r', encoding='utf-8'))
+
+    client = AnimeClient(config=CONFIG)
+
     client.run('NDAxMzg0Mjc4NDg0NzEzNDcz.DTpbpw.8sfhalMvCFPFgnKVrmTC08GhvlA')
 
 

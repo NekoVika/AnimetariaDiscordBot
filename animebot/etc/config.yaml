@@ -2,7 +2,10 @@ NAME: CHOPK
 
 DEFAULT_GAME: "with himself"
 
-GUILD_ID : '270727104319062026'
+GUILD_ID: '270727104319062026'
+
+LINES_PATH: "lines.yaml"
+HIRA_PATH: "hiragana.txt"
 
 CHANNELS:
   main: guild
